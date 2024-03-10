@@ -20,4 +20,25 @@ const addPost = async (titulo, img, descripcion) => {
   console.log("Dato agregado");
 };
 
-module.exports = { getAllData, addPost };
+const updateLikes = async (id) => {
+  const consulta =
+    "UPDATE posts SET likes = COALESCE(likes, 0) + 1 WHERE id =$1";
+  const values = [id];
+  const { rowCount } = await pool.query(consulta, values);
+  if (rowCount === 0) {
+    throw { code: 404, message: "No se consiguió ningún post con ese id" };
+  }
+  console.log("Likes actualizados", consulta);
+};
+
+const deletePost = async (id) => {
+  const consulta = "DELETE FROM posts where id = $1 ";
+  const values = [id];
+  const { rowCount } = await pool.query(consulta, values);
+  if (rowCount === 0) {
+    throw { code: 404, message: "No se consiguió ningún post con ese id" };
+  }
+  console.log("Dato eliminado");
+};
+
+module.exports = { getAllData, addPost, updateLikes, deletePost };

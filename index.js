@@ -1,4 +1,9 @@
-const { getAllData, addPost } = require("./operaciones");
+const {
+  getAllData,
+  addPost,
+  updateLikes,
+  deletePost,
+} = require("./operaciones");
 
 const express = require("express");
 
@@ -27,5 +32,25 @@ app.post("/posts", async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+app.put("/posts/like/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await updateLikes(id);
+    res.send("Numero de likes actualizado");
+  } catch ({ code, message }) {
+    res.status(code).send(message);
+  }
+});
+
+app.delete("/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await deletePost(id);
+    res.send("Dato eliminado correctamente");
+  } catch ({ code, message }) {
+    res.status(code).send(message);
   }
 });
